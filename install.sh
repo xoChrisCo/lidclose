@@ -67,7 +67,7 @@ CHIME_SOUND=/System/Library/Sounds/Glass.aiff
 
 # How loud/insistent the alert is. The system volume is temporarily raised
 # to at least MIN_VOLUME during the alert (and restored afterwards).
-CHIME_REPEATS=3   # plays per alert, 1s apart
+CHIME_REPEATS=1   # plays per alert, 1s apart
 CHIME_GAIN=3      # afplay -v multiplier (>1 amplifies)
 MIN_VOLUME=60     # floor for system output volume during the alert
 

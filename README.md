@@ -30,7 +30,7 @@ restart needed):
 
 ```sh
 CHIME_SOUND=/System/Library/Sounds/Glass.aiff  # any .aiff in /System/Library/Sounds
-CHIME_REPEATS=3    # plays per alert, 1s apart
+CHIME_REPEATS=1    # plays per alert, 1s apart
 CHIME_GAIN=3       # afplay -v multiplier (>1 amplifies)
 MIN_VOLUME=60      # floor for system output volume during the alert
 REPEAT_MINUTES=0   # 0 = chime once per lid close; 10 = also nag every 10 minutes

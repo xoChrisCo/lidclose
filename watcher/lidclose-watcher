@@ -54,7 +54,7 @@ last_chime=0
 while true; do
   # Defaults; config file overrides.
   CHIME_SOUND=/System/Library/Sounds/Glass.aiff
-  CHIME_REPEATS=3   # plays per alert, 1s apart
+  CHIME_REPEATS=1   # plays per alert, 1s apart
   CHIME_GAIN=3      # afplay -v multiplier (>1 amplifies)
   MIN_VOLUME=60     # floor for system output volume during the alert
   REPEAT_MINUTES=0
