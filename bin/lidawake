@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Keep the Mac awake when the lid is closed.
+set -euo pipefail
+sudo /usr/bin/pmset -a disablesleep 1
+echo "lid sleep OFF — Mac stays awake with the lid closed (run lidsleep to restore)"

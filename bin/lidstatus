@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Show whether sleep is disabled and whether the lid is currently closed.
+set -euo pipefail
+
+if pmset -g | grep -q 'SleepDisabled[[:space:]]*1'; then
+  echo "sleep:   DISABLED (lid close will NOT sleep the Mac)"
+else
+  echo "sleep:   normal (lid close sleeps the Mac)"
+fi
+
+if ioreg -r -k AppleClamshellState -d 1 | grep -q '"AppleClamshellState" = Yes'; then
+  echo "lid:     closed"
+else
+  echo "lid:     open"
+fi
+
+if launchctl list 2>/dev/null | grep -q com.lidclose.watcher; then
+  echo "watcher: running"
+else
+  echo "watcher: NOT running (run install.sh)"
+fi

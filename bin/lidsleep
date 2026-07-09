@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Restore normal sleep behavior (lid close puts the Mac to sleep).
+set -euo pipefail
+sudo /usr/bin/pmset -a disablesleep 0
+echo "lid sleep normal"

@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# lidclose-watcher — chime when the lid closes while sleep is disabled,
+# so you don't forget the Mac is staying awake in your bag.
+#
+# Run by the com.lidclose.watcher LaunchAgent. Polls every POLL_SECONDS.
+# Config is re-read every loop, so edits to ~/.config/lidclose/config
+# take effect without restarting the agent.
+set -u
+
+CONFIG="$HOME/.config/lidclose/config"
+POLL_SECONDS=5
+
+lid_closed() {
+  ioreg -r -k AppleClamshellState -d 1 | grep -q '"AppleClamshellState" = Yes'
+}
+
+sleep_disabled() {
+  pmset -g | grep -q 'SleepDisabled[[:space:]]*1'
+}
+
+chime() {
+  # Three quick plays so it's audible through a closed lid.
+  for _ in 1 2 3; do afplay "$CHIME_SOUND"; done
+}
+
+log() {
+  echo "$(date '+%Y-%m-%d %H:%M:%S') $*"
+}
+
+log "watcher started (poll ${POLL_SECONDS}s)"
+
+was_alerting=0
+last_chime=0
+while true; do
+  # Defaults; config file overrides.
+  CHIME_SOUND=/System/Library/Sounds/Glass.aiff
+  REPEAT_MINUTES=0
+  [ -f "$CONFIG" ] && . "$CONFIG"
+
+  if lid_closed && sleep_disabled; then
+    now=$(date +%s)
+    if [ "$was_alerting" -eq 0 ]; then
+      log "lid closed with sleep disabled — chiming"
+      chime
+      last_chime=$now
+      was_alerting=1
+    elif [ "${REPEAT_MINUTES:-0}" -gt 0 ] && [ $((now - last_chime)) -ge $((REPEAT_MINUTES * 60)) ]; then
+      log "reminder chime (every ${REPEAT_MINUTES}m)"
+      chime
+      last_chime=$now
+    fi
+  else
+    was_alerting=0
+  fi
+
+  sleep "$POLL_SECONDS"
+done
