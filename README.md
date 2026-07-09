@@ -69,5 +69,5 @@ PATH entry. Your config in `~/.config/lidclose/` is kept.
 
 ## Requirements
 
-macOS. Tested on macOS 15 (Sequoia) on Apple silicon. Everything used —
+macOS. Tested on macOS 26 (Tahoe) on Apple silicon. Everything used —
 `pmset`, `ioreg`, `afplay`, `launchd` — ships with the OS.

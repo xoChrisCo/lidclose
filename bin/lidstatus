@@ -14,7 +14,8 @@ else
   echo "lid:     open"
 fi
 
-if launchctl list 2>/dev/null | grep -q com.lidclose.watcher; then
+# No grep -q: early exit would SIGPIPE launchctl and trip pipefail.
+if launchctl list 2>/dev/null | grep com.lidclose.watcher >/dev/null; then
   echo "watcher: running"
 else
   echo "watcher: NOT running (run install.sh)"
