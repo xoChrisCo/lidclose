@@ -20,14 +20,19 @@ so a closed lid with sleep disabled never goes unnoticed.
 ## The chime
 
 A tiny watcher runs as a LaunchAgent and polls the lid sensor every 5 seconds.
-When you close the lid while sleep is disabled, it plays a chime (three quick
-Glass sounds) so you know the Mac is staying awake.
+When you close the lid while sleep is disabled, it plays a chime so you know
+the Mac is staying awake. A closed lid muffles the speakers badly, so the
+alert is amplified, repeated with 1-second gaps, and the system volume is
+temporarily raised to a floor (then restored) — it fires even on a muted Mac.
 
 Configure it in `~/.config/lidclose/config` (changes apply immediately, no
 restart needed):
 
 ```sh
 CHIME_SOUND=/System/Library/Sounds/Glass.aiff  # any .aiff in /System/Library/Sounds
+CHIME_REPEATS=3    # plays per alert, 1s apart
+CHIME_GAIN=3       # afplay -v multiplier (>1 amplifies)
+MIN_VOLUME=60      # floor for system output volume during the alert
 REPEAT_MINUTES=0   # 0 = chime once per lid close; 10 = also nag every 10 minutes
 ```
 

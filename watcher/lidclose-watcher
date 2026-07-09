@@ -19,8 +19,28 @@ sleep_disabled() {
 }
 
 chime() {
-  # Three quick plays so it's audible through a closed lid.
-  for _ in 1 2 3; do afplay "$CHIME_SOUND"; done
+  # A closed lid muffles the speakers badly, so: enforce a minimum system
+  # volume (restored afterwards), amplify with afplay -v, and space the
+  # plays out so it's noticeable to someone already walking away.
+  local vol muted
+  vol=$(osascript -e 'output volume of (get volume settings)' 2>/dev/null || echo "")
+  muted=$(osascript -e 'output muted of (get volume settings)' 2>/dev/null || echo "")
+  if [ -n "$vol" ] && { [ "$muted" = "true" ] || [ "$vol" -lt "$MIN_VOLUME" ]; }; then
+    osascript -e "set volume output volume $MIN_VOLUME"
+  fi
+
+  local i=0
+  while [ "$i" -lt "$CHIME_REPEATS" ]; do
+    afplay -v "$CHIME_GAIN" "$CHIME_SOUND"
+    i=$((i + 1))
+    [ "$i" -lt "$CHIME_REPEATS" ] && sleep 1
+  done
+
+  if [ -n "$vol" ]; then
+    osascript -e "set volume output volume $vol"
+    [ "$muted" = "true" ] && osascript -e 'set volume output muted true'
+  fi
+  return 0
 }
 
 log() {
@@ -34,6 +54,9 @@ last_chime=0
 while true; do
   # Defaults; config file overrides.
   CHIME_SOUND=/System/Library/Sounds/Glass.aiff
+  CHIME_REPEATS=3   # plays per alert, 1s apart
+  CHIME_GAIN=3      # afplay -v multiplier (>1 amplifies)
+  MIN_VOLUME=60     # floor for system output volume during the alert
   REPEAT_MINUTES=0
   [ -f "$CONFIG" ] && . "$CONFIG"
 
