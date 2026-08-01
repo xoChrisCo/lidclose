@@ -6,7 +6,6 @@
 	<string>com.lidclose.watcher</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/bin/bash</string>
 		<string>__DIR__/watcher/lidclose-watcher</string>
 	</array>
 	<key>RunAtLoad</key>
